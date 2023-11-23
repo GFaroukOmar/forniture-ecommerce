@@ -13,10 +13,10 @@ const Hero = ({ children, color = 'primary' }) => (
     </div>
 );
 
-const Heading = ({ className='', level=6, children, color = 'primary' }) => {
+const Heading = ({ style={},className='', level=6, children, color = 'primary' }) => {
     const Tag = `h${level}`;
     return (
-        <Tag style={{ color: getColorVariable(color) }} className={`H${level} ${className}`}>
+        <Tag style={{ color: getColorVariable(color),...style }} className={`H${level} ${className}`}>
             {children}
         </Tag>
     );

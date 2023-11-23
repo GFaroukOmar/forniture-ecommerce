@@ -1,6 +1,7 @@
 import {Swiper, SwiperSlide} from "swiper/react";
 import Badge from "../../components/in-components-reuseable-components/Badge";
 import {Navigation} from "swiper/modules";
+import {useRef} from "react";
 const iconStyles = {
     position: 'absolute',
     top: '50%',
@@ -9,26 +10,33 @@ const iconStyles = {
     zIndex:2
 
 };
-const ProductMainImageSlide=({product})=>{
+
+const ProductImage = ({image,index,onClick}) => {
+
+  return(
+      <img className={'pointer-cursor'} onClick={()=>onClick(index)} alt={'product'} src={image} height={'167px'} width={'167px'} style={{minWidth:'167px'}}/>
+  )
+}
+const ProductImageSlide=({image,isMainImage,product})=>{
     const style={
-        backgroundImage:`url(${product.mainImage})`,
+        backgroundImage:`url(${image})`,
         backgroundColor: '#F3F5F7',
         backgroundSize: '100% 100%',
         backgroundBlendMode: 'multiply, normal',
         backgroundRepeat:'no-repeat',
         backgroundPosition:'center',
-        width: '548px',
-        height: '729px',
+        width: '448px',
+        height: '629px',
     }
     return(<div style={style} >
-                <div className={'d-inline-flex flex-column gap-4 mt-3 ms-3'}>
-                    {product.isNew&&<Badge>new</Badge>}
-                    {product.discount!==0&&
-                        <Badge backgroundColor={'var(--green)'} textColor={'white'}>
-                            {`-${product.discount}%`}
-                        </Badge>
-                    }
-                </div>
+        {isMainImage&&<div className={'d-inline-flex flex-column gap-4 mt-3 ms-3'}>
+            {product.isNew&&<Badge>new</Badge>}
+            {product.discount!==0&&
+                <Badge backgroundColor={'var(--green)'} textColor={'white'}>
+                    {`-${product.discount}%`}
+                </Badge>
+            }
+        </div>}
     </div>)
 }
 const NextElementIcon=()=>{
@@ -89,21 +97,31 @@ const PreviousElementIcon=()=>{
     )
 }
 const ProductImagesSlider = ({product}) => {
-  return(
-        <div style={{width: '548px',height: '729px',}}>
-          <Swiper style={{width:'100%'}} modules={[Navigation]}
+    const swiperRef = useRef();
+    const handleClick = (slideIndex) => {
+        if (swiperRef.current && swiperRef.current.swiper) {
+            swiperRef.current.swiper.slideTo(slideIndex);
+        }
+    };
+    return(
+        <div style={{width: '448px', height: 'auto',display:'flex',flexDirection:'column',gap:'24px'}}>
+          <Swiper ref={swiperRef} style={{width:'100%'}} modules={[Navigation]}
+                  slide
                   loop
                   navigation={{
                       prevEl:'#product-images-previous-element',
-                      nextEl:'#product-images-next-element'
+                      nextEl:'#product-images-next-element',
                   }}
           >
-              <SwiperSlide><ProductMainImageSlide product={product}/></SwiperSlide>
-              <SwiperSlide><ProductMainImageSlide product={product}/></SwiperSlide>
-              <SwiperSlide><ProductMainImageSlide product={product}/></SwiperSlide>
+              <SwiperSlide><ProductImageSlide isMainImage={true} product={product} image={product.mainImage}/></SwiperSlide>
+              {product.images.map(image=><SwiperSlide><ProductImageSlide image={image}/></SwiperSlide>)}
               <PreviousElementIcon/>
               <NextElementIcon/>
           </Swiper>
+            <div className={'d-flex custom-horizontal-scroll overflow-x-auto gap-4'}>
+                <ProductImage onClick={handleClick} index={0} image={product.mainImage}/>
+                {product.images.map((image,index)=><ProductImage onClick={handleClick} index={index+1} image={image}/>)}
+            </div>
         </div>
       )
 }
