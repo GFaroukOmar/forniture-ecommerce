@@ -3,14 +3,17 @@ import Badge from "../in-components-reuseable-components/Badge";
 import AddToFavorite from "../in-components-reuseable-components/AddToFavorite";
 import {Text} from "../in-components-reuseable-components/TypographyComponents";
 import useSmallScreen from "../../hooks/useSmallScreen";
+import {Navigate} from "react-router-dom";
+
+
 import AddToCartButton from "../in-components-reuseable-components/AddToCartButton";
 import RatingStars from "../in-components-reuseable-components/RatingStars";
-
-
-const ProductCard = ({product}) => {
+const ProductCard = ({product,category}) => {
 
     const [isSmallScreen] =useSmallScreen()
     const [isOnHover, setIsOnHover] = useState(false)
+    const [goToProductPage, setGoToProductPage] = useState(false)
+    if (goToProductPage)return <Navigate to={`/shop/${category}/${product.productId}/`}/>
     const badgesStyle={
         gap:'16px',
         display:'inline-flex'
@@ -45,7 +48,7 @@ const ProductCard = ({product}) => {
                onClick={handleMouseEnter}
                onMouseLeave={handleMouseLeave}>
               <div style={imageContainerStyle}
-                   className={'d-flex pointer-cursor justify-content-between'}>
+                   onClick={()=>setGoToProductPage(true)} className={'d-flex pointer-cursor justify-content-between'}>
                   <div className={'w-100 d-flex justify-content-between m-3'}>
                       <div className={'d-flex align-items-center flex-column'} style={badgesStyle}>
                           {product.isNew&&<Badge>new</Badge>}
