@@ -1,9 +1,18 @@
-import {useParams} from "react-router-dom";
+// import {useParams} from "react-router-dom";
 import NavigationBar from "../../components/in-pages-reuseable-components/NavigationBar";
 import ProductImagesSlider from "./ProductImagesSlider";
 import ProductPresentation from "./ProductPresentation";
+import {useEffect, useMemo, useState} from "react";
+import useSmallScreen from "../../hooks/useSmallScreen";
+import ProductCarousel from "../home-page/ProductCarousel";
+import NewsLetter from "../../components/in-pages-reuseable-components/NewsLetter";
+import Footer from "../../components/in-pages-reuseable-components/Footer";
+import {Heading} from "../../components/in-components-reuseable-components/TypographyComponents";
+import {useParams} from "react-router-dom";
 const description='Super-soft cushion cover in off-white with a tactile pattern that enhances the different tones in the pile and base.'
 const product={
+    quantity:3,
+    stockQuantity:10,
     productId:1,
     name:'Tray table',
     description:description,
@@ -26,16 +35,34 @@ const product={
         '/images/products/tray-table/tray-table-3.jpg',
         '/images/products/tray-table/tray-table-4.jpg']}
 const ProductPage = () => {
-    const {category,productId}=useParams()
-    console.log('category',category)
-    console.log('id',productId)
+    const [productId, setProductId] = useState('');
+    const { category, productId: paramProductId } = useParams();
+
+    // Use useEffect to update the state when the route parameter changes
+    useEffect(() => {
+        document.title='product'
+        setProductId(paramProductId);
+    }, [paramProductId]);
+
+    console.log('product id:'+productId)
+    useEffect(() => {
+
+    }, [productId]);
+    const [currentColor, setCurrentColor] = useState(product.defaultColor)
+    const updateCurrentColor=(chosenColor)=>{
+        setCurrentColor(chosenColor)
+    }
+    const [isSmallScreen]=useSmallScreen()
   return(
       <>
           <NavigationBar activePage={'shop'}/>
-          <div className={'container d-flex'} style={{marginTop:'56px',gap:'64px'}}>
-              <ProductImagesSlider product={product}/>
-              <ProductPresentation product={product}/>
+          <div className={'container'} style={!isSmallScreen ?{display:'flex',marginTop:'56px',gap:'64px'}:{display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <ProductImagesSlider product={product} currentColor={currentColor}/>
+              <ProductPresentation product={product} currentColor={currentColor} updateCurrentColor={updateCurrentColor}/>
           </div>
+          <ProductCarousel title={'You may also like'}/>
+          <NewsLetter/>
+          <Footer/>
       </>
   )
 }

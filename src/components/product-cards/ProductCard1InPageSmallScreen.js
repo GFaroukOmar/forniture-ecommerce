@@ -4,8 +4,11 @@ import AddToFavorite from "../in-components-reuseable-components/AddToFavorite";
 import {useContext} from "react";
 import {Context} from "../../hooks/CartContext";
 import {Text} from "../in-components-reuseable-components/TypographyComponents";
+import navigateToProductPage from "./navigateToProductPage";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const AddToCartButton = ({product}) => {
+
     const value=useContext(Context)
     const addToCart=value.addToCart
     const removeFromCart=value.removeFromCart
@@ -42,7 +45,16 @@ const AddToCartButton = ({product}) => {
     )
 }
 
-const productCard1InPageSmallScreen = ({product}) => {
+const ProductCard1InPageSmallScreen = ({product}) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleProductClick = (product) => {
+        const newPath = `/shop/${product.category}/${product.productId}/`;
+        // Use the state property to force a rerender of the current route
+        navigate(newPath, { state: { key: location.key + 1 } });
+        window.scrollTo(0, 0);
+    };
     const imageHolderStyle={
         height:'416px',
         width:'312px',
@@ -58,11 +70,10 @@ const productCard1InPageSmallScreen = ({product}) => {
         width:'321px',
         height: '416px',
     }
-
     return(
 
             <div className={'d-flex flex-column'} style={containerStyle}>
-                <div style={imageHolderStyle}>
+                <div className={'pointer-cursor'} onClick={()=>handleProductClick(product)} style={imageHolderStyle}>
                     <div className={'d-inline-flex mt-3 ms-3 flex-column'} style={{gap:'8px'}}>
                         {product.isNew && <Badge>New</Badge>}
                         {product.discount!==0 && <Badge backgroundColor={'var(--green)'}>{`-$${product.discount}`}</Badge>}
@@ -85,7 +96,6 @@ const productCard1InPageSmallScreen = ({product}) => {
                 </div>
             </div>
 
-
     )
 }
-export default productCard1InPageSmallScreen
+export default ProductCard1InPageSmallScreen

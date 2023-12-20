@@ -5,9 +5,9 @@ import {useEffect, useState} from "react";
 import GoToLinkUnderlined from "../../components/in-components-reuseable-components/GoToLinkUnderlined";
 
 const cards={
-    card1:{category: "Living Room", link: "/go", image: "/images/home-page/living-room.jpg"},
-    card2:{category: "Living Room", link: "/go", image: "/images/home-page/kitchen.jpg"},
-    card3:{category: "Living Room", link: "/go", image: "/images/home-page/bed-room.jpg"}
+    card1:{category: "Living Room", link: "/shop", image: "/images/home-page/living-room.jpg"},
+    card2:{category: "Living Room", link: "/shop", image: "/images/home-page/kitchen.jpg"},
+    card3:{category: "Living Room", link: "/shop", image: "/images/home-page/bed-room.jpg"}
 }
 
 const BannerGrid=()=>{

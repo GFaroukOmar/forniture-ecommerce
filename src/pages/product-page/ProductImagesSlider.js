@@ -2,6 +2,7 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import Badge from "../../components/in-components-reuseable-components/Badge";
 import {Navigation} from "swiper/modules";
 import {useRef} from "react";
+import useSmallScreen from "../../hooks/useSmallScreen";
 const iconStyles = {
     position: 'absolute',
     top: '50%',
@@ -10,14 +11,15 @@ const iconStyles = {
     zIndex:2
 
 };
-
+//image square under the swiper
 const ProductImage = ({image,index,onClick}) => {
 
   return(
       <img className={'pointer-cursor'} onClick={()=>onClick(index)} alt={'product'} src={image} height={'167px'} width={'167px'} style={{minWidth:'167px'}}/>
   )
 }
-const ProductImageSlide=({image,isMainImage,product})=>{
+const ProductImageSlide=({image,isMainImage,discount,isNew})=>{
+    const [isSmallScreen]=useSmallScreen()
     const style={
         backgroundImage:`url(${image})`,
         backgroundColor: '#F3F5F7',
@@ -25,15 +27,16 @@ const ProductImageSlide=({image,isMainImage,product})=>{
         backgroundBlendMode: 'multiply, normal',
         backgroundRepeat:'no-repeat',
         backgroundPosition:'center',
-        width: '448px',
-        height: '629px',
+        width: isSmallScreen?'311px':'448px',
+        height: isSmallScreen?'414px':'629px',
+
     }
     return(<div style={style} >
         {isMainImage&&<div className={'d-inline-flex flex-column gap-4 mt-3 ms-3'}>
-            {product.isNew&&<Badge>new</Badge>}
-            {product.discount!==0&&
+            {isMainImage&&isNew&&<Badge>new</Badge>}
+            {isMainImage&&discount&&discount!==0&&
                 <Badge backgroundColor={'var(--green)'} textColor={'white'}>
-                    {`-${product.discount}%`}
+                    {`-${discount}%`}
                 </Badge>
             }
         </div>}
@@ -96,15 +99,18 @@ const PreviousElementIcon=()=>{
 
     )
 }
-const ProductImagesSlider = ({product}) => {
+// the swiper and its under square images
+const ProductImagesSlider = ({product,currentColor}) => {
+    const currentColorObject=product.colors.find(colorObject=>colorObject.color===currentColor)
     const swiperRef = useRef();
-    const handleClick = (slideIndex) => {
+    const handleImageSquareClick = (slideIndex) => {
         if (swiperRef.current && swiperRef.current.swiper) {
             swiperRef.current.swiper.slideTo(slideIndex);
         }
     };
+    const [isSmallScreen]=useSmallScreen()
     return(
-        <div style={{width: '448px', height: 'auto',display:'flex',flexDirection:'column',gap:'24px'}}>
+        <div style={isSmallScreen?{width: '311px', height: '414px'}:{width: '448px', height: 'auto',display:'flex',flexDirection:'column',gap:'24px'}}>
           <Swiper ref={swiperRef} style={{width:'100%'}} modules={[Navigation]}
                   slide
                   loop
@@ -113,15 +119,22 @@ const ProductImagesSlider = ({product}) => {
                       nextEl:'#product-images-next-element',
                   }}
           >
-              <SwiperSlide><ProductImageSlide isMainImage={true} product={product} image={product.mainImage}/></SwiperSlide>
+              <SwiperSlide><ProductImageSlide isMainImage={true} isNew={product.isNew} discount={product.discount} image={currentColorObject.mainImage}/></SwiperSlide>
+              {/*colored images slides*/}
+              {currentColorObject.images.map(image=><SwiperSlide><ProductImageSlide image={image}/></SwiperSlide>)}
+              {/*description images sliders*/}
               {product.images.map(image=><SwiperSlide><ProductImageSlide image={image}/></SwiperSlide>)}
               <PreviousElementIcon/>
               <NextElementIcon/>
           </Swiper>
-            <div className={'d-flex custom-horizontal-scroll overflow-x-auto gap-4'}>
-                <ProductImage onClick={handleClick} index={0} image={product.mainImage}/>
-                {product.images.map((image,index)=><ProductImage onClick={handleClick} index={index+1} image={image}/>)}
-            </div>
+            {!isSmallScreen && <div className={'d-flex custom-horizontal-scroll overflow-x-auto gap-4'}>
+                <ProductImage onClick={handleImageSquareClick} index={0} image={currentColorObject.mainImage}/>
+                {/*colored square images*/}
+                {currentColorObject.images.map(image => <SwiperSlide><ProductImageSlide image={image}/></SwiperSlide>)}
+                {/*description square images*/}
+                {product.images.map((image, index) => <ProductImage onClick={handleImageSquareClick} index={index + 1}
+                                                                    image={image}/>)}
+            </div>}
         </div>
       )
 }

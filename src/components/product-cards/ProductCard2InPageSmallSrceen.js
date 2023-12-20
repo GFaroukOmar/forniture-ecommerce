@@ -6,6 +6,7 @@ import {useContext, useState} from "react";
 import {Context} from "../../hooks/CartContext";
 import {Text} from "../in-components-reuseable-components/TypographyComponents";
 import RatingStars from "../in-components-reuseable-components/RatingStars";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const AddToCartButton = ({product}) => {
     const value=useContext(Context)
@@ -44,6 +45,15 @@ const AddToCartButton = ({product}) => {
 }
 
 const ProductCard2InPageSmallScreen = ({product}) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleProductClick = (product) => {
+        const newPath = `/shop/${product.category}/${product.productId}/`;
+        // Use the state property to force a rerender of the current route
+        navigate(newPath, { state: { key: location.key + 1 } });
+        window.scrollTo(0, 0);
+    };
     const imageHolderStyle={
         borderRadius:'8px',
         backgroundImage: `url(${product.mainImage})`,
@@ -75,7 +85,11 @@ const ProductCard2InPageSmallScreen = ({product}) => {
                     {inSelect && <AddToFavorite isFavorite={product.isFavorite}  removeFromFavorite={() => {
                     }} addToFavorite={() => {}} />}
                 </div>
-                {inSelect && <div style={{marginBottom:'16px'}}><AddToCartButton product={product} /></div>}
+                {inSelect &&
+                    <div className={'d-flex flex-column align-items-center'}>
+                        <div className={'pointer-cursor'} onClick={()=>handleProductClick(product)}>more details-></div>
+                        <div style={{marginBottom:'16px'}}><AddToCartButton product={product} /></div>
+                    </div>}
             </div>
             <div className={'d-flex flex-column'} style={{gap: '4px'}}>
                 <RatingStars rating={product.rating}/>

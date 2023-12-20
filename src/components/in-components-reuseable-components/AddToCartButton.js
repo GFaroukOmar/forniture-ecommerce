@@ -9,7 +9,7 @@ const AddToCartButton = ({product}) => {
     const addToCart=value.addToCart
     const removeFromCart=value.removeFromCart
     const cartProducts=value.products;
-    const isInCart =cartProducts.some(p=>p===product)
+    const isInCart =cartProducts.some(p=>p.productId===product.productId && p.color===product.color)
     const buttonStyle={
         padding: '8px 24px',
         backgroundColor: 'var(--primary)',

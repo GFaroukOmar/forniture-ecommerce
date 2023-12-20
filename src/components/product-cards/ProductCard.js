@@ -3,17 +3,25 @@ import Badge from "../in-components-reuseable-components/Badge";
 import AddToFavorite from "../in-components-reuseable-components/AddToFavorite";
 import {Text} from "../in-components-reuseable-components/TypographyComponents";
 import useSmallScreen from "../../hooks/useSmallScreen";
-import {Navigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 import AddToCartButton from "../in-components-reuseable-components/AddToCartButton";
 import RatingStars from "../in-components-reuseable-components/RatingStars";
-const ProductCard = ({product,category}) => {
+import GoToLinkUnderlined from "../in-components-reuseable-components/GoToLinkUnderlined";
+const ProductCard = ({product}) => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    const handleProductClick = (product) => {
+        const newPath = `/shop/${product.category}/${product.productId}/`;
+        // Use the state property to force a rerender of the current route
+        navigate(newPath, { state: { key: location.key + 1 } });
+        window.scrollTo(0, 0);
+    };
     const [isSmallScreen] =useSmallScreen()
     const [isOnHover, setIsOnHover] = useState(false)
-    const [goToProductPage, setGoToProductPage] = useState(false)
-    if (goToProductPage)return <Navigate to={`/shop/${category}/${product.productId}/`}/>
+
     const badgesStyle={
         gap:'16px',
         display:'inline-flex'
@@ -48,7 +56,7 @@ const ProductCard = ({product,category}) => {
                onClick={handleMouseEnter}
                onMouseLeave={handleMouseLeave}>
               <div style={imageContainerStyle}
-                   onClick={()=>setGoToProductPage(true)} className={'d-flex pointer-cursor justify-content-between'}>
+                    className={'d-flex pointer-cursor justify-content-between'}>
                   <div className={'w-100 d-flex justify-content-between m-3'}>
                       <div className={'d-flex align-items-center flex-column'} style={badgesStyle}>
                           {product.isNew&&<Badge>new</Badge>}
@@ -64,8 +72,13 @@ const ProductCard = ({product,category}) => {
                           console.log('add to favorites')}}/>}
                   </div>
               </div>
+
               {isOnHover &&
-                  <div style={{marginBottom:'16px',flexGrow:'1',display:'flex',alignItems:'end',justifyContent:'center'}}> <AddToCartButton product={product}/></div>}
+                  <div className={'d-flex flex-column align-items-center'}>
+                      <div style={{marginBottom:'16px',flexGrow:'1',display:'flex',alignItems:'end',justifyContent:'center'}}> <AddToCartButton product={product}/></div>
+                      <div className={'pointer-cursor'} onClick={()=>handleProductClick(product)}>go to product page -></div>
+                  </div>
+              }
           </div>
           <div>
               <RatingStars rating={product.rating}/>
@@ -80,7 +93,6 @@ const ProductCard = ({product,category}) => {
               </div>
           </div>
       </div>
-
   )
 }
 export default ProductCard

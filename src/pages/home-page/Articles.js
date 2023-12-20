@@ -1,21 +1,8 @@
-import {Heading, Text} from "../../components/in-components-reuseable-components/TypographyComponents";
+import {Heading} from "../../components/in-components-reuseable-components/TypographyComponents";
 import GoToLinkUnderlined from "../../components/in-components-reuseable-components/GoToLinkUnderlined";
-import useSmallScreen from "../../hooks/useSmallScreen";
-const ArticleCard = ({image,title,link}) => {
-    const [isSmallScreen]=useSmallScreen()
-    const articleImageStyle={
-        width:isSmallScreen?'311px':'357px',
-        height:isSmallScreen?'283px':'325px'
-    }
-    return(
-        <div className={'d-flex flex-column justify-content-center gap-2 align-items-center align-items-lg-start'}>
-            <img src={image}  alt={'article'} style={articleImageStyle}/>
-            <Text size={20} weight={'LittleBald'}>{title}</Text>
-            <GoToLinkUnderlined link={link}>Read More</GoToLinkUnderlined>
-        </div>
-    )
-  
-}
+
+import ArticleCard from "../../components/in-pages-reuseable-components/ArticleCard";
+
 const Articles = () => {
   return(
       <div className={'container d-flex flex-column gap-3'} style={{marginTop: '48px',}}>

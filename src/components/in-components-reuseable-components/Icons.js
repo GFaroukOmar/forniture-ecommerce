@@ -87,19 +87,19 @@ const EditIcon=()=> <svg className={"scalable-icon"} xmlns="http://www.w3.org/20
     <path d="M16.7687 2H7.23122C5.41387 2 3.7796 3.24476 3.10466 5.14305L2.34667 7.27487C2.11723 7.92019 1.95862 8.61074 2.12598 9.27488C2.52232 10.8478 3.8082 12 5.3333 12C7.17424 12 8.66663 10.3211 8.66663 8.25C8.66663 10.3211 10.159 12 12 12C13.8409 12 15.3333 10.3211 15.3333 8.25C15.3333 10.3211 16.8257 12 18.6666 12C20.1917 12 21.4776 10.8478 21.8739 9.27488C22.0413 8.61074 21.8827 7.92019 21.6533 7.27487L20.8953 5.14305C20.2203 3.24475 18.5861 2 16.7687 2Z" stroke="#141718" stroke-width="1.5" stroke-linejoin="round"/>
     <path d="M9 19C9 17.3431 10.3431 16 12 16C13.6569 16 15 17.3431 15 19V22H9V19Z" stroke="#141718" stroke-width="1.5" stroke-linejoin="round"/>
 </svg>
-const CircleNumber = ({ number=0 }) => {
+const CircleNumber = ({ number=0 ,width='12px',height='12px'}) => {
     return (
         <div
             style={{
-                width: "12px",
-                height: "12px",
+                width: width,
+                height: height,
                 borderRadius: "50%",
                 backgroundColor: "#000000",
                 color: "#fff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "18px",
+                fontSize: "20px",
             }}
         >
             <div style={{fontSize:"10px"}}>{number}</div>
@@ -195,8 +195,19 @@ const Grid2X1Inactive = () => {
           <path d="M6 21.1737L6 13.1756L18 13.1756L18 21.1737L6 21.1737Z" fill="#6C7275"/>
           <path d="M6 11.1717L6 3.17366L18 3.17366L18 11.1717L6 11.1717Z" fill="#6C7275"/>
       </svg>
-
   )
+}
+const HalfRightArrow = () => {
+    return(<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 7L14 12L10 17" stroke="#6C7275" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>)
+}
+const CheckIcon=()=>{
+    return(
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
+            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022"/>
+        </svg>
+    )
 }
 export {
     SearchIcon,ProfileIcon,BagIcon,HeartIcon,TicketIcon,
@@ -204,5 +215,5 @@ export {
     StoreOutlineIcon,EditIcon,InstagramIcon,FacebookIcon,YoutubeIcon,
     CameraIcon,CalendarIcon,EmailIcon,CircleNumber,CancelIcon,NavigationMenuIcon,FilledHeartIcon,
     StarIcon,PlusIcon,MinusIcon,FilterIcon,Grid3X3Active,Grid3X3Inactive,Grid2X1Active,Grid2X1Inactive,
-    Grid2X2Active,Grid2X2Inactive,Grid1X2Active,Grid1X2Inactive
+    Grid2X2Active,Grid2X2Inactive,Grid1X2Active,Grid1X2Inactive,HalfRightArrow,CheckIcon
 }

@@ -1,9 +1,13 @@
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {Context as CartContext} from "../../hooks/CartContext";
 import useSmallScreen from "../../hooks/useSmallScreen";
 import {Heading, Text} from "./TypographyComponents";
 import {CancelIcon, MinusIcon, PlusIcon} from "./Icons";
-const ProductCell = ({product}) => {
+import {Navigate, useLocation, useNavigate, useParams} from "react-router-dom";
+import ProductInCartQuantityControl from "./ProductInCartQuantityControl";
+const ProductCell = ({product,hideCart}) => {
+    const{category,productId}=useParams()
+    const [redirect, setRedirect] = useState(false)
     const value=useContext(CartContext)
     const productCellContainerStyle={
         padding:'24px 0 24px 0',
@@ -16,21 +20,24 @@ const ProductCell = ({product}) => {
         alignItems:'center',
         gap:'16px'
     }
+    console.log("product.productId=%s\nproduct.category=%s paramId=%s,paramCategory=%s",product.productId,product.category,productId,category)
+    if (redirect && product.productId !==parseInt(productId)){
+        hideCart()
+        return(
+            <Navigate to={`/shop/${product.category}/${product.productId}/`}/>
+        )
+    }
     return(
         <div style={productCellContainerStyle}>
-            <img src={product.mainImage} height={'96px'} width={'80px'}  alt={"product"}/>
+            <img className={"pointer-cursor"} onClick={()=> setRedirect(true)} src={product.mainImage} height={'96px'} width={'80px'}  alt={"product"}/>
             <div className={'d-flex w-100 justify-content-between'}>
                 <div className={'d-flex flex-column'} style={{gap:'8px'}}>
                     <Text size={14} weight={'SemiBald'}>{product.name}</Text>
                     <Text size={12} weight={'AverageBald'} color={'neutral-04'}>Color: {product.color}</Text>
-                    <div className={'d-inline-flex   align-items-center'} style={{gap:'12px',padding:'0 8px 0 8px',border:'solid var(--neutral-04) 1px',borderRadius:'4px'}}>
-                        <div className={'pointer-cursor'} onClick={()=>value.decreaseQuantity(product)}><MinusIcon/></div>
-                        <div>{value.products.find(p=>p===product).quantity}</div>
-                        <div className={'pointer-cursor'} onClick={()=>value.increaseQuantity(product)}><PlusIcon/></div>
-                    </div>
+                    <ProductInCartQuantityControl product={product}/>
                 </div>
                 <div className={'d-flex flex-column'} style={{gap:'8px'}}>
-                    <Text size={14} weight={'SemiBald'}>${product.originalPrice}</Text>
+                    <Text size={14} weight={'SemiBald'}>${product.priceAfterDiscount}</Text>
                     <div className={'pointer-cursor'} onClick={()=>value.removeFromCart(product)}><CancelIcon/></div>
                 </div>
             </div>
@@ -65,6 +72,16 @@ const CartProductsToggle = ({hideCart}) => {
     const handleChildClick = (event) => {
         event.stopPropagation();
     };
+    const navigate = useNavigate();
+    const location = useLocation();
+    const handleButtonClick= () => {
+        const newPath = `/cart`;
+        // Use the state property to force a rerender of the current route
+        navigate(newPath, { state: { key: location.key + 1 } });
+        window.scrollTo(0, 0);
+    };
+    let sum =0;
+    value.products.forEach(p=> {if(p.priceAfterDiscount) sum += p.originalPrice})
     return(
 
                 <div style={overlayStyle} onClick={()=>hideCart()}>
@@ -75,7 +92,14 @@ const CartProductsToggle = ({hideCart}) => {
                                     <div className={'pointer-cursor'} onClick={()=>hideCart()}><CancelIcon/></div>}
                             </div>
                             <div class={'d-flex flex-column overflow-y-auto'}>
-                                {value.products.map(p=><ProductCell product={p}/>)}
+                                {value.products.map(p=><ProductCell product={p} hideCart={hideCart}/>)}
+                            </div>
+                            <div>
+                                <div className={'py-3 d-flex justify-content-between'}>
+                                    <Text size={20} weight={'LittleBald'}>Total</Text>
+                                    <Text size={20} weight={'LittleBald'}>${sum}</Text>
+                                </div>
+                                <div className={'pointer-cursor scalable-icon'} style={{color:'white',backgroundColor:'#141718',borderRadius:'6px',display: 'flex',padding: '10px 26px', justifyContent: 'center', alignItems: 'center',}} onClick={handleButtonClick}> go to cart </div>
                             </div>
                         </div>
                 </div>

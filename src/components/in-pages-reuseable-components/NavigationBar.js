@@ -38,7 +38,7 @@ const SmallScreensMenu = () => {
             <div style={overlayStyle} className={"d-flex flex-column align-items-start justify-content-start"}>
                 <div className={"d-flex ms-3 mt-4 gap-3 flex-column align-items-start justify-content-start"}>
                     <Text size={24}>3elegant<ColoredSpan >.</ColoredSpan></Text>
-                    <Link to={"/home"}>Home</Link>
+                    <Link to={"/"}>Home</Link>
                     <Link to={"/shop"}>Shop</Link>
                     <Link to={"/products"}>Products</Link>
                     <Link to={"/contact-us"}>Contact Us</Link>
@@ -108,7 +108,7 @@ const BrandName = () =>{
 }
 
 const NavigationBar=({activePage="home"})=>{
-    const [isCartShown, setIsCartShown] = useState()
+    const [isCartShown, setIsCartShown] = useState(false)
     const showCart=()=>setIsCartShown(true)
     const hideCart=()=>setIsCartShown(false)
 

@@ -3,8 +3,18 @@ import RatingStars from "../in-components-reuseable-components/RatingStars";
 import {Text} from "../in-components-reuseable-components/TypographyComponents";
 import AddToCartButton from "../in-components-reuseable-components/AddToCartButton";
 import AddToFavorite from "../in-components-reuseable-components/AddToFavorite";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const ProductCard2InPageLargeScreens = ({product}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleProductClick = (product) => {
+    const newPath = `/shop/${product.category}/${product.productId}/`;
+    // Use the state property to force a rerender of the current route
+    navigate(newPath, { state: { key: location.key + 1 } });
+    window.scrollTo(0, 0);
+  };
   const containerStyle={
     borderRadius:'8px',
     display:'flex',
@@ -30,7 +40,7 @@ const ProductCard2InPageLargeScreens = ({product}) => {
   }
   return(
       <div style={containerStyle}>
-        <div style={imageHolderStyle}>
+        <div className={'pointer-cursor'} onClick={()=>handleProductClick(product)} style={imageHolderStyle}>
         <div style={{gap:'8px'}} class={'w-100 d-flex flex-column justify-content-start align-items-start mt-3 ms-3'}>
           {product.isNew&&<Badge>New</Badge>}
           {product.discount!==0 && <Badge textColor={'black'} backgroundColor={"var(--green)"}>{`-${product.discount}%`}</Badge>}
